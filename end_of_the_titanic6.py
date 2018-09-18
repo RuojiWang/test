@@ -73,14 +73,14 @@ for dataset in combine:
     dataset.loc[(dataset['Age'] > 48) & (dataset['Age'] <= 64), 'Age'] = 3 
     dataset.loc[ dataset['Age'] > 64, 'Age'] = 4
     
-#这里的mode是求解pandas.core.series.Series众数的第一个值（可能有多个众数）
+#杩欓噷鐨刴ode鏄眰瑙andas.core.series.Series浼楁暟鐨勭涓�涓�硷紙鍙兘鏈夊涓紬鏁帮級
 freq_port = data_train.Embarked.dropna().mode()[0]
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].fillna(freq_port)
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
 
-#将data_test中的fare元素所缺失的部分由已经包含的数据的中位数决定哈
+#灏哾ata_test涓殑fare鍏冪礌鎵�缂哄け鐨勯儴鍒嗙敱宸茬粡鍖呭惈鐨勬暟鎹殑涓綅鏁板喅瀹氬搱
 data_test['Fare'].fillna(data_test['Fare'].dropna().median(), inplace=True)
 
 for dataset in combine:
@@ -94,34 +94,34 @@ for dataset in combine:
     dataset.loc[(dataset.Cabin.isnull()), 'Cabin'] = 0
     dataset.loc[(dataset.Cabin.notnull()), 'Cabin'] = 1
 
-#尼玛给你说的这个是贡献船票，原来的英文里面根本就没有这种说法嘛
+#灏肩帥缁欎綘璇寸殑杩欎釜鏄础鐚埞绁紝鍘熸潵鐨勮嫳鏂囬噷闈㈡牴鏈氨娌℃湁杩欑璇存硶鍢�
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
 #print(df)
-df_ticket = df.index.values          #共享船票的票号
-tickets = data_train.Ticket.values   #所有的船票
+df_ticket = df.index.values          #鍏变韩鑸圭エ鐨勭エ鍙�
+tickets = data_train.Ticket.values   #鎵�鏈夌殑鑸圭エ
 #print(tickets)
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-        ticket = 0                   #遍历所有船票，在共享船票里面的为1，否则为0
+        ticket = 0                   #閬嶅巻鎵�鏈夎埞绁紝鍦ㄥ叡浜埞绁ㄩ噷闈㈢殑涓�1锛屽惁鍒欎负0
     result.append(ticket)
     
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
-df_ticket = df.index.values          #共享船票的票号
-tickets = data_train.Ticket.values   #所有的船票
+df_ticket = df.index.values          #鍏变韩鑸圭エ鐨勭エ鍙�
+tickets = data_train.Ticket.values   #鎵�鏈夌殑鑸圭エ
 
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-        ticket = 0                   #遍历所有船票，在共享船票里面的为1，否则为0
+        ticket = 0                   #閬嶅巻鎵�鏈夎埞绁紝鍦ㄥ叡浜埞绁ㄩ噷闈㈢殑涓�1锛屽惁鍒欎负0
     result.append(ticket)
 
 results = pd.DataFrame(result)
@@ -154,7 +154,7 @@ Y_train = data_train_1['Survived']
 X_test = data_test_1[['Pclass', 'Sex', 'Age', 'Fare', 'Embarked', 'Cabin', 'Title', 'FamilySizePlus', 'Ticket_Count']]
 
 X_all = pd.concat([X_train, X_test], axis=0)
-#我觉得训练集和测试集需要在一起进行特征缩放，所以注释掉了原来的X_train的特征缩放咯
+#鎴戣寰楄缁冮泦鍜屾祴璇曢泦闇�瑕佸湪涓�璧疯繘琛岀壒寰佺缉鏀撅紝鎵�浠ユ敞閲婃帀浜嗗師鏉ョ殑X_train鐨勭壒寰佺缉鏀惧挴
 X_all_scaled = pd.DataFrame(preprocessing.scale(X_all), columns = X_train.columns)
 #X_train_scaled = pd.DataFrame(preprocessing.scale(X_train), columns = X_train.columns)
 X_train_scaled = X_all_scaled[:len(X_train)]
@@ -179,7 +179,7 @@ class MyModule1(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -223,7 +223,7 @@ class MyModule2(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -267,7 +267,7 @@ class MyModule3(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -311,7 +311,7 @@ class MyModule4(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -357,7 +357,7 @@ class MyModule5(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -408,7 +408,7 @@ class MyModule6(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -459,7 +459,7 @@ class MyModule7(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -510,7 +510,7 @@ class MyModule8(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -564,7 +564,7 @@ class MyModule9(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -624,7 +624,7 @@ class MyModule10(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -683,7 +683,7 @@ class MyModule11(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -742,7 +742,7 @@ class MyModule12(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#就是使用默认设置的意思咯
+            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -804,7 +804,7 @@ class MyModule13(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -871,7 +871,7 @@ class MyModule14(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -938,7 +938,7 @@ class MyModule15(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1005,7 +1005,7 @@ class MyModule16(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1074,7 +1074,7 @@ class MyModule17(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1148,7 +1148,7 @@ class MyModule18(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1222,7 +1222,7 @@ class MyModule19(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1296,7 +1296,7 @@ class MyModule20(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1372,7 +1372,7 @@ class MyModule21(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1453,7 +1453,7 @@ class MyModule22(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1534,7 +1534,7 @@ class MyModule23(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1615,7 +1615,7 @@ class MyModule24(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#就是什么都不做的意思
+            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1717,12 +1717,12 @@ def print_nnclf_acc(acc):
 def print_best_params_acc(trials):
     
     trials_list =[]
-    #从trials中读取最大的准确率信息咯
-    #item和result其实指向了一个dict对象
+    #浠巘rials涓鍙栨渶澶х殑鍑嗙‘鐜囦俊鎭挴
+    #item鍜宺esult鍏跺疄鎸囧悜浜嗕竴涓猟ict瀵硅薄
     for item in trials.trials:
         trials_list.append(item)
     
-    #按照关键词进行排序，关键词即为item['result']['loss']
+    #鎸夌収鍏抽敭璇嶈繘琛屾帓搴忥紝鍏抽敭璇嶅嵆涓篿tem['result']['loss']
     trials_list.sort(key=lambda item: item["result"]["loss"])
     
     print("best parameter is:", trials_list[0])
@@ -1784,7 +1784,7 @@ def noise_augment_data(mean, std, X_train, Y_train, columns):
 
     return X_noise_train, Y_train
     
-#我觉得这个中文文档介绍hyperopt还是比较好https://www.jianshu.com/p/35eed1567463
+#鎴戣寰楄繖涓腑鏂囨枃妗ｄ粙缁峢yperopt杩樻槸姣旇緝濂絟ttps://www.jianshu.com/p/35eed1567463
 def nn_f(params):
     
     print("mean", params["mean"])
@@ -1874,9 +1874,9 @@ def predict(best_nodes, max_evals=10):
                                   optimizer = best_nodes["optimizer"]
                                   )
         
-        #在这重新初始化一次基本就会得到差异很大的结果吧
-        #现在可以看到确实是经过了权重初始化模型重新训练的
-        #但是这个best_model的数据怎么还是上一回的数据？
+        #鍦ㄨ繖閲嶆柊鍒濆鍖栦竴娆″熀鏈氨浼氬緱鍒板樊寮傚緢澶х殑缁撴灉鍚�
+        #鐜板湪鍙互鐪嬪埌纭疄鏄粡杩囦簡鏉冮噸鍒濆鍖栨ā鍨嬮噸鏂拌缁冪殑
+        #浣嗘槸杩欎釜best_model鐨勬暟鎹�庝箞杩樻槸涓婁竴鍥炵殑鏁版嵁锛�
         clf.module.init_weight(best_nodes["init_mode"])
         
         clf.fit(X_train_scaled.values.astype(np.float32), Y_train.values.astype(np.longlong)) 
@@ -1884,9 +1884,9 @@ def predict(best_nodes, max_evals=10):
         metric = cal_nnclf_acc(clf, X_train_scaled, Y_train)
         print_nnclf_acc(metric)
         
-        #那么现在的best_model应该就不会被修改了吧
+        #閭ｄ箞鐜板湪鐨刡est_model搴旇灏变笉浼氳淇敼浜嗗惂
         best_model, best_acc, flag = record_best_model_acc(clf, metric, best_model, best_acc)
-        #通过下面的两行代码可以发现clf确实每次都是新创建的，但是module每次都是重复使用的
+        #閫氳繃涓嬮潰鐨勪袱琛屼唬鐮佸彲浠ュ彂鐜癱lf纭疄姣忔閮芥槸鏂板垱寤虹殑锛屼絾鏄痬odule姣忔閮芥槸閲嶅浣跨敤鐨�
         #print(id(clf))
         #print(id(clf.module))
     
@@ -1900,15 +1900,15 @@ def predict(best_nodes, max_evals=10):
             print("prediction file has been written.")
         print()
      
-    #因为下面的clf中的module已经被重新训练了，所以已经是新的模型了，还是直接输出best_acc   
+    #鍥犱负涓嬮潰鐨刢lf涓殑module宸茬粡琚噸鏂拌缁冧簡锛屾墍浠ュ凡缁忔槸鏂扮殑妯″瀷浜嗭紝杩樻槸鐩存帴杈撳嚭best_acc   
     #metric = cal_nnclf_acc(best_model, X_train_scaled, Y_train)
     print("the best accuracy rate of the model on the whole train dataset is:", best_acc)
     
-#我真的曹乐，做不做数据集增强好像差别很大哦，不添加噪声准确率高得多呢。。好像也不是
-#上回那个貌似是巧合而已，我多运行了几次发现加了噪声好像是要高一点点呢。。
-#倒是patience设置为10的时候绝壁没有设置为5的时候效果好呢。。不看运行输出真还不知道
-#现在我的代码应用到下一个版本的时候只需要修改space、space_nodes以及best_nodes和parse_space
-#predict函数内data = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
+#鎴戠湡鐨勬浌涔愶紝鍋氫笉鍋氭暟鎹泦澧炲己濂藉儚宸埆寰堝ぇ鍝︼紝涓嶆坊鍔犲櫔澹板噯纭巼楂樺緱澶氬憿銆傘�傚ソ鍍忎篃涓嶆槸
+#涓婂洖閭ｄ釜璨屼技鏄阀鍚堣�屽凡锛屾垜澶氳繍琛屼簡鍑犳鍙戠幇鍔犱簡鍣０濂藉儚鏄楂樹竴鐐圭偣鍛€�傘��
+#鍊掓槸patience璁剧疆涓�10鐨勬椂鍊欑粷澹佹病鏈夎缃负5鐨勬椂鍊欐晥鏋滃ソ鍛€�傘�備笉鐪嬭繍琛岃緭鍑虹湡杩樹笉鐭ラ亾
+#鐜板湪鎴戠殑浠ｇ爜搴旂敤鍒颁笅涓�涓増鏈殑鏃跺�欏彧闇�瑕佷慨鏀箂pace銆乻pace_nodes浠ュ強best_nodes鍜宲arse_space
+#predict鍑芥暟鍐卍ata = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
 space = {"title":hp.choice("title", ["titanic"]),
          "path":hp.choice("path", ["C:/Users/1/Desktop/Titanic_Prediction.csv"]),
          "mean":hp.choice("mean", [0]),
@@ -1979,7 +1979,7 @@ best_nodes = {"title":"titanic",
               "optimizer":torch.optim.Adam
               }
 
-#我觉得这边需要添加一个计算计时的功能
+#鎴戣寰楄繖杈归渶瑕佹坊鍔犱竴涓绠楄鏃剁殑鍔熻兘
 start_time = datetime.datetime.now()
 
 trials = Trials()
@@ -1989,28 +1989,29 @@ best_params = fmin(nn_f, space, algo=algo, max_evals=1, trials=trials)
 print_best_params_acc(trials)
 
 best_nodes = parse_space(trials, space_nodes, best_nodes)
-#save_inter_params保存的是本次搜索到的参数
+#save_inter_params淇濆瓨鐨勬槸鏈鎼滅储鍒扮殑鍙傛暟
 save_inter_params(trials, space_nodes, best_nodes, "titanic")
 trials, space_nodes, best_nodes = load_inter_params("titanic")
 
-#predict中的best_model保存的是本机运行过程中最佳模型
-#现在还有一个奇怪的问题，predict中似乎还是不对，因为初始正确率太高了吧
-#经过我测试，我发现predict中初始正确率确实有在变化，所以应该木问题吧
-#现在就是将所有容易改变的东西都放到space、space_nodes、best_nodes以及parse_space
-#这样的做法有利于避免我忘记修改代码细节从而导致影响模型的训练过程
-#我感觉除了和模型相关的超参我已经搞定的差不多了，今后主要决策和模型相关的超参
-#比如说是模型的层数、每层的节点数、初始化的方式、初始化的范围、偏置的设置值
-#明天的工作就先从模型生成器开始咯。。
+#predict涓殑best_model淇濆瓨鐨勬槸鏈満杩愯杩囩▼涓渶浣虫ā鍨�
+#鐜板湪杩樻湁涓�涓鎬殑闂锛宲redict涓技涔庤繕鏄笉瀵癸紝鍥犱负鍒濆姝ｇ‘鐜囧お楂樹簡鍚�
+#缁忚繃鎴戞祴璇曪紝鎴戝彂鐜皃redict涓垵濮嬫纭巼纭疄鏈夊湪鍙樺寲锛屾墍浠ュ簲璇ユ湪闂鍚�
+#鐜板湪灏辨槸灏嗘墍鏈夊鏄撴敼鍙樼殑涓滆タ閮芥斁鍒皊pace銆乻pace_nodes銆乥est_nodes浠ュ強parse_space
+#杩欐牱鐨勫仛娉曟湁鍒╀簬閬垮厤鎴戝繕璁颁慨鏀逛唬鐮佺粏鑺備粠鑰屽鑷村奖鍝嶆ā鍨嬬殑璁粌杩囩▼
+#鎴戞劅瑙夐櫎浜嗗拰妯″瀷鐩稿叧鐨勮秴鍙傛垜宸茬粡鎼炲畾鐨勫樊涓嶅浜嗭紝浠婂悗涓昏鍐崇瓥鍜屾ā鍨嬬浉鍏崇殑瓒呭弬
+#姣斿璇存槸妯″瀷鐨勫眰鏁般�佹瘡灞傜殑鑺傜偣鏁般�佸垵濮嬪寲鐨勬柟寮忋�佸垵濮嬪寲鐨勮寖鍥淬�佸亸缃殑璁剧疆鍊�
+#鏄庡ぉ鐨勫伐浣滃氨鍏堜粠妯″瀷鐢熸垚鍣ㄥ紑濮嬪挴銆傘��
 predict(best_nodes, max_evals=10)
 
 end_time = datetime.datetime.now()
 print("time cost", (end_time - start_time))
 
+print("mother fucker~")
 """
-#模型一旦被修改了之后pickle中的文件再读出来就没用啦
-#还好我及时保存了老版本的模型，不然感觉就心酸了。。。
-#不过其实没保存问题也不大的吧，直接重新计算一次。。。
-#同一日期下的中间结果和最佳模型是配套的，虽然这中间结果未必产生了最佳模型
+#妯″瀷涓�鏃﹁淇敼浜嗕箣鍚巔ickle涓殑鏂囦欢鍐嶈鍑烘潵灏辨病鐢ㄥ暒
+#杩樺ソ鎴戝強鏃朵繚瀛樹簡鑰佺増鏈殑妯″瀷锛屼笉鐒舵劅瑙夊氨蹇冮吀浜嗐�傘�傘��
+#涓嶈繃鍏跺疄娌′繚瀛橀棶棰樹篃涓嶅ぇ鐨勫惂锛岀洿鎺ラ噸鏂拌绠椾竴娆°�傘�傘��
+#鍚屼竴鏃ユ湡涓嬬殑涓棿缁撴灉鍜屾渶浣虫ā鍨嬫槸閰嶅鐨勶紝铏界劧杩欎腑闂寸粨鏋滄湭蹇呬骇鐢熶簡鏈�浣虫ā鍨�
 files = open("titanic_intermediate_parameters_2018-9-15221036.pickle", "rb")
 trials, space_nodes, best_nodes = pickle.load(files)
 files.close()
