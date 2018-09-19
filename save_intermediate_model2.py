@@ -1,15 +1,24 @@
 #coding=utf-8
-<<<<<<< HEAD
-=======
-
-print("mother fucker")
-
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
+#下面的代码主要是2018-9-17计算10000/1000次的分析
+#创建这样一个文件也便于分析存储神经网络的结构
+#毕竟每次大计算机我都会修改神经网络的结构
+#这次我在原代码上面添加了计时功能显示运算了28个小时。。
+#我觉得现在我现在大致的情况是：
+#我现在对这个问题的理解，除了网络结构以外的超参都调的差不多了。
+#但是结果不是很理想呀，正在郁闷不知道咋样处理呢。。
+#我觉得我现在面临的问题主要是：
+#（1）我不知道两次大计算算出来的模型哪个更好？
+#针对这个问题，下次选择好最佳超参的时候，用最佳超参训练模型
+#然后将模型训练完之后在进行一次交叉验证码？但是训练完成之后
+#在进行交叉验证还有意义吗，必须是没使用过的数据才能用于验证吧
+#所以目前看来这个问题还是比较玄学的咯。。
+#（2）然后我不知道怎么对于模型进行进一步的优化。
+#以我有限的知识和经验似乎模型层面的优化似乎提升大概也就是这么多了吧
+#现在的我好想才是真的不知所措了吧
 import os
 import sys
 import random
 import pickle
-import datetime
 import numpy as np
 import pandas as pd
 sys.path.append("D:\\Workspace\\Titanic")
@@ -31,6 +40,13 @@ from hyperopt import fmin, tpe, hp, space_eval, rand, Trials, partial, STATUS_OK
 def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
     return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
+def cal_nnclf_acc(clf, X_train, Y_train):
+    
+    Y_train_pred = clf.predict(X_train.values.astype(np.float32))
+    count = (Y_train_pred == Y_train).sum()
+    acc = count/len(Y_train)
+    
+    return acc
 
 data_train = pd.read_csv("C:/Users/1/Desktop/train.csv")
 data_test = pd.read_csv("C:/Users/1/Desktop/test.csv")
@@ -79,22 +95,14 @@ for dataset in combine:
     dataset.loc[(dataset['Age'] > 48) & (dataset['Age'] <= 64), 'Age'] = 3 
     dataset.loc[ dataset['Age'] > 64, 'Age'] = 4
     
-<<<<<<< HEAD
 #这里的mode是求解pandas.core.series.Series众数的第一个值（可能有多个众数）
-=======
-#鏉╂瑩鍣烽惃鍒磑de閺勵垱鐪扮憴顤禷ndas.core.series.Series娴兼鏆熼惃鍕儑娑擄拷娑擃亜锟界》绱欓崣顖濆厴閺堝顦挎稉顏冪船閺佸府绱�
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
 freq_port = data_train.Embarked.dropna().mode()[0]
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].fillna(freq_port)
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
 
-<<<<<<< HEAD
 #将data_test中的fare元素所缺失的部分由已经包含的数据的中位数决定哈
-=======
-#鐏忓摼ata_test娑擃厾娈慺are閸忓啰绀岄幍锟界紓鍝勩亼閻ㄥ嫰鍎撮崚鍡欐暠瀹歌尙绮￠崠鍛儓閻ㄥ嫭鏆熼幑顔炬畱娑擃厺缍呴弫鏉垮枀鐎规艾鎼�
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
 data_test['Fare'].fillna(data_test['Fare'].dropna().median(), inplace=True)
 
 for dataset in combine:
@@ -108,56 +116,34 @@ for dataset in combine:
     dataset.loc[(dataset.Cabin.isnull()), 'Cabin'] = 0
     dataset.loc[(dataset.Cabin.notnull()), 'Cabin'] = 1
 
-<<<<<<< HEAD
 #尼玛给你说的这个是贡献船票，原来的英文里面根本就没有这种说法嘛
-=======
-#鐏忚偐甯ョ紒娆庣稑鐠囧娈戞潻娆庨嚋閺勵垵纭�閻氼喛鍩炵粊顭掔礉閸樼喐娼甸惃鍕閺傚洭鍣烽棃銏＄壌閺堫剙姘ㄥ▽鈩冩箒鏉╂瑧顫掔拠瀛樼《閸拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
 #print(df)
-<<<<<<< HEAD
 df_ticket = df.index.values          #共享船票的票号
 tickets = data_train.Ticket.values   #所有的船票
-=======
-df_ticket = df.index.values          #閸忓彉闊╅懜鍦偍閻ㄥ嫮銈ㄩ崣锟�
-tickets = data_train.Ticket.values   #閹碉拷閺堝娈戦懜鍦偍
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
 #print(tickets)
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-<<<<<<< HEAD
         ticket = 0                   #遍历所有船票，在共享船票里面的为1，否则为0
-=======
-        ticket = 0                   #闁秴宸婚幍锟介張澶庡煘缁侇煉绱濋崷銊ュ彙娴滎偉鍩炵粊銊╁櫡闂堛垻娈戞稉锟�1閿涘苯鎯侀崚娆庤礋0
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
     result.append(ticket)
     
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
-<<<<<<< HEAD
 df_ticket = df.index.values          #共享船票的票号
 tickets = data_train.Ticket.values   #所有的船票
-=======
-df_ticket = df.index.values          #閸忓彉闊╅懜鍦偍閻ㄥ嫮銈ㄩ崣锟�
-tickets = data_train.Ticket.values   #閹碉拷閺堝娈戦懜鍦偍
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
 
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-<<<<<<< HEAD
         ticket = 0                   #遍历所有船票，在共享船票里面的为1，否则为0
-=======
-        ticket = 0                   #闁秴宸婚幍锟介張澶庡煘缁侇煉绱濋崷銊ュ彙娴滎偉鍩炵粊銊╁櫡闂堛垻娈戞稉锟�1閿涘苯鎯侀崚娆庤礋0
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
     result.append(ticket)
 
 results = pd.DataFrame(result)
@@ -190,11 +176,7 @@ Y_train = data_train_1['Survived']
 X_test = data_test_1[['Pclass', 'Sex', 'Age', 'Fare', 'Embarked', 'Cabin', 'Title', 'FamilySizePlus', 'Ticket_Count']]
 
 X_all = pd.concat([X_train, X_test], axis=0)
-<<<<<<< HEAD
 #我觉得训练集和测试集需要在一起进行特征缩放，所以注释掉了原来的X_train的特征缩放咯
-=======
-#閹存垼顫庡妤勵唲缂佸啴娉﹂崪灞剧ゴ鐠囨洟娉﹂棁锟界憰浣告躬娑擄拷鐠х柉绻樼悰宀�澹掑浣虹級閺�鎾呯礉閹碉拷娴犮儲鏁為柌濠冨竴娴滃棗甯弶銉ф畱X_train閻ㄥ嫮澹掑浣虹級閺�鎯ф尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
 X_all_scaled = pd.DataFrame(preprocessing.scale(X_all), columns = X_train.columns)
 #X_train_scaled = pd.DataFrame(preprocessing.scale(X_train), columns = X_train.columns)
 X_train_scaled = X_all_scaled[:len(X_train)]
@@ -219,11 +201,7 @@ class MyModule1(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -267,11 +245,7 @@ class MyModule2(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -315,11 +289,7 @@ class MyModule3(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -363,11 +333,7 @@ class MyModule4(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -413,11 +379,7 @@ class MyModule5(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -468,11 +430,7 @@ class MyModule6(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -523,11 +481,7 @@ class MyModule7(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -578,11 +532,7 @@ class MyModule8(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -636,11 +586,7 @@ class MyModule9(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -700,11 +646,7 @@ class MyModule10(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -763,11 +705,7 @@ class MyModule11(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -826,11 +764,7 @@ class MyModule12(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-<<<<<<< HEAD
             pass#就是使用默认设置的意思咯
-=======
-            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -892,11 +826,7 @@ class MyModule13(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -963,11 +893,7 @@ class MyModule14(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1034,11 +960,7 @@ class MyModule15(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1105,11 +1027,7 @@ class MyModule16(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1178,11 +1096,7 @@ class MyModule17(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1256,11 +1170,7 @@ class MyModule18(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1334,11 +1244,7 @@ class MyModule19(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1412,11 +1318,7 @@ class MyModule20(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1492,11 +1394,7 @@ class MyModule21(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1577,11 +1475,7 @@ class MyModule22(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1662,11 +1556,7 @@ class MyModule23(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1747,11 +1637,7 @@ class MyModule24(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-<<<<<<< HEAD
             pass#就是什么都不做的意思
-=======
-            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1827,7 +1713,7 @@ module23 = MyModule23()
 module24 = MyModule24()
 
 net = NeuralNetClassifier(
-    module = module3,
+    module = module6,
     lr=0.1,
     #device="cuda",
     device="cpu",
@@ -1838,389 +1724,31 @@ net = NeuralNetClassifier(
     callbacks=[skorch.callbacks.EarlyStopping(patience=10)]
 )
 
-def cal_nnclf_acc(clf, X_train, Y_train):
-    
-    Y_train_pred = clf.predict(X_train.values.astype(np.float32))
-    count = (Y_train_pred == Y_train).sum()
-    acc = count/len(Y_train)
-    
-    return acc
-
-def print_nnclf_acc(acc):
-    
-    print("the accuracy rate of the model on the whole train dataset is:", acc)
-  
-def print_best_params_acc(trials):
-    
-    trials_list =[]
-<<<<<<< HEAD
-    #从trials中读取最大的准确率信息咯
-    #item和result其实指向了一个dict对象
-    for item in trials.trials:
-        trials_list.append(item)
-    
-    #按照关键词进行排序，关键词即为item['result']['loss']
-=======
-    #娴犲窐rials娑擃叀顕伴崣鏍ㄦ付婢堆呮畱閸戝棛鈥橀悳鍥︿繆閹垰鎸�
-    #item閸滃esult閸忚泛鐤勯幐鍥ф倻娴滃棔绔存稉鐚焛ct鐎电钖�
-    for item in trials.trials:
-        trials_list.append(item)
-    
-    #閹稿鍙庨崗鎶芥暛鐠囧秷绻樼悰灞惧笓鎼村骏绱濋崗鎶芥暛鐠囧秴宓嗘稉绡縯em['result']['loss']
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-    trials_list.sort(key=lambda item: item["result"]["loss"])
-    
-    print("best parameter is:", trials_list[0])
-    print()
-    
-def exist_files(title):
-    
-    return os.path.exists(title+"_best_model.pickle")
-    
-def save_inter_params(trials, space_nodes, best_nodes, title):
- 
-    files = open(str(title+"_intermediate_parameters.pickle"), "wb")
-    pickle.dump([trials, space_nodes, best_nodes], files)
-    files.close()
-
-def load_inter_params(title):
-  
-    files = open(str(title+"_intermediate_parameters.pickle"), "rb")
-    trials, space_nodes, best_nodes = pickle.load(files)
-    files.close()
-    
-    return trials, space_nodes ,best_nodes
-    
-def save_best_model(best_model, title):
-    
-    files = open(str(title+"_best_model.pickle"), "wb")
-    pickle.dump(best_model, files)
-    files.close()
-    
-def load_best_model(title):
-    
-    files = open(str(title+"_best_model.pickle"), "rb")
-    best_model = pickle.load(files)
-    files.close()
-    
-    return best_model
-    
-def record_best_model_acc(clf, acc, best_model, best_acc):
-    
-    flag = False
-    
-    if not isclose(best_acc, acc):
-        if best_acc < acc:
-            flag = True
-            best_acc = acc
-            best_model = clf
-            
-    return best_model, best_acc, flag
-
-def noise_augment_data(mean, std, X_train, Y_train, columns):
-    
-    X_noise_train = X_train.copy()
-    X_noise_train.is_copy = False
-    
-    row = X_train.shape[0]
-    for i in range(0, row):
-        for j in columns:
-            X_noise_train.iloc[i,[j]] +=  random.gauss(mean, std)
-
-    return X_noise_train, Y_train
-    
-<<<<<<< HEAD
-#我觉得这个中文文档介绍hyperopt还是比较好https://www.jianshu.com/p/35eed1567463
-=======
-#閹存垼顫庡妤勭箹娑擃亙鑵戦弬鍥ㄦ瀮濡楋絼绮欑紒宄peropt鏉╂ɑ妲稿В鏃囩窛婵傜禑ttps://www.jianshu.com/p/35eed1567463
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-def nn_f(params):
-    
-    print("mean", params["mean"])
-    print("std", params["std"])
-    print("lr", params["lr"])
-    print("optimizer__weight_decay", params["optimizer__weight_decay"])
-    print("criterion", params["criterion"])
-    print("batch_size", params["batch_size"])
-    print("optimizer__betas", params["optimizer__betas"])
-    print("module", params["module"])    
-    
-    X_noise_train, Y_noise_train = noise_augment_data(params["mean"], params["std"], X_train_scaled, Y_train, columns=[3, 4, 5, 6, 7, 8])
-    
-    clf = NeuralNetClassifier(lr = params["lr"],
-                              optimizer__weight_decay = params["optimizer__weight_decay"],
-                              criterion = params["criterion"],
-                              batch_size = params["batch_size"],
-                              optimizer__betas = params["optimizer__betas"],
-                              module=params["module"],
-                              max_epochs = params["max_epochs"],
-                              callbacks=[skorch.callbacks.EarlyStopping(patience=params["patience"])],
-                              device = best_nodes["device"],
-                              optimizer = best_nodes["optimizer"]
-                              )
-    
-    skf = StratifiedKFold(Y_noise_train, n_folds=5, shuffle=True, random_state=None)
-    
-    clf.module.init_weight(params["init_mode"])
-    
-    metric = cross_val_score(clf, X_noise_train.values.astype(np.float32), Y_noise_train.values.astype(np.longlong), cv=skf, scoring="accuracy").mean()
-    
-    print(metric)
-    print()    
-    return -metric
-
-def display_search_progress(search_times, nn_f):
-    
-    print("search times:", search_times)
-    return nn_f
-    
-def parse_space(trials, space_nodes, best_nodes):
-    
-    trials_list =[]
-    for item in trials.trials:
-        trials_list.append(item)
-    trials_list.sort(key=lambda item: item['result']['loss'])
-    
-    best_nodes["title"] = space_nodes["title"][trials_list[0]["misc"]["vals"]["title"][0]]
-    best_nodes["path"] = space_nodes["path"][trials_list[0]["misc"]["vals"]["path"][0]]
-    best_nodes["mean"] = space_nodes["mean"][trials_list[0]["misc"]["vals"]["mean"][0]]
-    best_nodes["std"] = space_nodes["std"][trials_list[0]["misc"]["vals"]["std"][0]]
-    best_nodes["batch_size"] = space_nodes["batch_size"][trials_list[0]["misc"]["vals"]["batch_size"][0]]
-    best_nodes["criterion"] = space_nodes["criterion"][trials_list[0]["misc"]["vals"]["criterion"][0]]
-    best_nodes["max_epochs"] = space_nodes["max_epochs"][trials_list[0]["misc"]["vals"]["max_epochs"][0]]
-    best_nodes["lr"] = trials_list[0]["misc"]["vals"]["lr"][0]
-    best_nodes["module"] = space_nodes["module"][trials_list[0]["misc"]["vals"]["module"][0]] 
-    best_nodes["optimizer__betas"] = space_nodes["optimizer__betas"][trials_list[0]["misc"]["vals"]["optimizer__betas"][0]]
-    best_nodes["optimizer__weight_decay"] = space_nodes["optimizer__weight_decay"][trials_list[0]["misc"]["vals"]["optimizer__weight_decay"][0]]
-    best_nodes["init_mode"] = space_nodes["init_mode"][trials_list[0]["misc"]["vals"]["init_mode"][0]]
-    best_nodes["patience"] = space_nodes["patience"][trials_list[0]["misc"]["vals"]["patience"][0]]
-    best_nodes["device"] = space_nodes["device"][trials_list[0]["misc"]["vals"]["device"][0]]
-    best_nodes["optimizer"] = space_nodes["optimizer"][trials_list[0]["misc"]["vals"]["optimizer"][0]]
-    
-    return best_nodes
-    
-def predict(best_nodes, max_evals=10):
-    
-    best_acc = 0.0
-    best_model = 0.0
-    if (exist_files(best_nodes["title"])):
-        best_model = load_best_model(best_nodes["title"])
-        best_acc = cal_nnclf_acc(best_model, X_train_scaled, Y_train)
-         
-    for i in range(0, max_evals):
-        
-        print(str(i+1)+"/"+str(max_evals)+" prediction progress have been made.")
-        
-        clf = NeuralNetClassifier(lr = best_nodes["lr"],
-                                  optimizer__weight_decay = best_nodes["optimizer__weight_decay"],
-                                  criterion = best_nodes["criterion"],
-                                  batch_size = best_nodes["batch_size"],
-                                  optimizer__betas = best_nodes["optimizer__betas"],
-                                  module=best_nodes["module"],
-                                  max_epochs = best_nodes["max_epochs"],
-                                  callbacks = [skorch.callbacks.EarlyStopping(patience=best_nodes["patience"])],
-                                  device = best_nodes["device"],
-                                  optimizer = best_nodes["optimizer"]
-                                  )
-        
-<<<<<<< HEAD
-        #在这重新初始化一次基本就会得到差异很大的结果吧
-        #现在可以看到确实是经过了权重初始化模型重新训练的
-        #但是这个best_model的数据怎么还是上一回的数据？
-=======
-        #閸︺劏绻栭柌宥嗘煀閸掓繂顫愰崠鏍︾濞嗏�崇唨閺堫剙姘ㄦ导姘繁閸掓澘妯婂鍌氱发婢堆呮畱缂佹挻鐏夐崥锟�
-        #閻滄澘婀崣顖欎簰閻鍩岀涵顔肩杽閺勵垳绮℃潻鍥︾啊閺夊啴鍣搁崚婵嗩潗閸栨牗膩閸ㄥ鍣搁弬鎷岊唲缂佸啰娈�
-        #娴ｅ棙妲告潻娆庨嚋best_model閻ㄥ嫭鏆熼幑顔斤拷搴濈疄鏉╂ɑ妲告稉濠佺閸ョ偟娈戦弫鐗堝祦閿涳拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-        clf.module.init_weight(best_nodes["init_mode"])
-        
-        clf.fit(X_train_scaled.values.astype(np.float32), Y_train.values.astype(np.longlong)) 
-        
-        metric = cal_nnclf_acc(clf, X_train_scaled, Y_train)
-        print_nnclf_acc(metric)
-        
-<<<<<<< HEAD
-        #那么现在的best_model应该就不会被修改了吧
-        best_model, best_acc, flag = record_best_model_acc(clf, metric, best_model, best_acc)
-        #通过下面的两行代码可以发现clf确实每次都是新创建的，但是module每次都是重复使用的
-=======
-        #闁絼绠為悳鏉挎躬閻ㄥ垺est_model鎼存棁顕氱亸鍙樼瑝娴兼俺顫︽穱顔芥暭娴滃棗鎯�
-        best_model, best_acc, flag = record_best_model_acc(clf, metric, best_model, best_acc)
-        #闁俺绻冩稉瀣桨閻ㄥ嫪琚辩悰灞煎敩閻礁褰叉禒銉ュ絺閻滅櫛lf绾喖鐤勫В蹇旑偧闁姤妲搁弬鏉垮灡瀵よ櫣娈戦敍灞肩稻閺勭棳odule濮ｅ繑顐奸柈鑺ユЦ闁插秴顦叉担璺ㄦ暏閻拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-        #print(id(clf))
-        #print(id(clf.module))
-    
-        if (flag):
-            save_best_model(best_model, best_nodes["title"])
-            Y_pred = best_model.predict(X_test_scaled.values.astype(np.float32))
-            
-            data = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
-            output = pd.DataFrame(data = data)
-            output.to_csv(best_nodes["path"], index=False)
-            print("prediction file has been written.")
-        print()
-     
-<<<<<<< HEAD
-    #因为下面的clf中的module已经被重新训练了，所以已经是新的模型了，还是直接输出best_acc   
-    #metric = cal_nnclf_acc(best_model, X_train_scaled, Y_train)
-    print("the best accuracy rate of the model on the whole train dataset is:", best_acc)
-    
-#我真的曹乐，做不做数据集增强好像差别很大哦，不添加噪声准确率高得多呢。。好像也不是
-#上回那个貌似是巧合而已，我多运行了几次发现加了噪声好像是要高一点点呢。。
-#倒是patience设置为10的时候绝壁没有设置为5的时候效果好呢。。不看运行输出真还不知道
-#现在我的代码应用到下一个版本的时候只需要修改space、space_nodes以及best_nodes和parse_space
-#predict函数内data = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
-=======
-    #閸ョ姳璐熸稉瀣桨閻ㄥ垻lf娑擃厾娈憁odule瀹歌尙绮＄悮顐﹀櫢閺傛媽顔勭紒鍐х啊閿涘本澧嶆禒銉ュ嚒缂佸繑妲搁弬鎵畱濡�崇�锋禍鍡礉鏉╂ɑ妲搁惄瀛樺复鏉堟挸鍤璪est_acc   
-    #metric = cal_nnclf_acc(best_model, X_train_scaled, Y_train)
-    print("the best accuracy rate of the model on the whole train dataset is:", best_acc)
-    
-#閹存垹婀￠惃鍕祵娑旀劧绱濋崑姘瑝閸嬫碍鏆熼幑顕�娉︽晶鐐插繁婵傝棄鍎氬顔煎焼瀵板牆銇囬崫锔肩礉娑撳秵鍧婇崝鐘叉珨婢规澘鍣涵顔惧芳妤傛ê绶辨径姘喛閵嗗倶锟藉倸銈介崓蹇庣瘍娑撳秵妲�
-#娑撳﹤娲栭柇锝勯嚋鐠ㄥ奔鎶�閺勵垰闃�閸氬牐锟藉苯鍑￠敍灞惧灉婢舵俺绻嶇悰灞肩啊閸戠姵顐奸崣鎴犲箛閸旂姳绨￠崳顏勶紣婵傝棄鍎氶弰顖濐洣妤傛ü绔撮悙鍦仯閸涒偓锟藉倶锟斤拷
-#閸婃帗妲竝atience鐠佸墽鐤嗘稉锟�10閻ㄥ嫭妞傞崐娆戠卜婢逛焦鐥呴張澶庮啎缂冾喕璐�5閻ㄥ嫭妞傞崐娆愭櫏閺嬫粌銈介崨鈧拷鍌橈拷鍌欑瑝閻绻嶇悰宀冪翻閸戣櫣婀℃潻妯圭瑝閻儵浜�
-#閻滄澘婀幋鎴犳畱娴狅絿鐖滄惔鏃傛暏閸掗绗呮稉锟芥稉顏嗗閺堫剛娈戦弮璺猴拷娆忓涧闂囷拷鐟曚椒鎱ㄩ弨绠俻ace閵嗕够pace_nodes娴犮儱寮穊est_nodes閸滃arse_space
-#predict閸戣姤鏆熼崘鍗峚ta = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-space = {"title":hp.choice("title", ["titanic"]),
-         "path":hp.choice("path", ["C:/Users/1/Desktop/Titanic_Prediction.csv"]),
-         "mean":hp.choice("mean", [0]),
-         #"std":hp.choice("std", [0]),
-         "std":hp.choice("std", [0, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.14, 0.16, 0.18, 0.20]),
-         "max_epochs":hp.choice("max_epochs",[400]),
-         "patience":hp.choice("patience", [1,2,3,4,5,6,7,8,9,10]),
-         "lr":hp.uniform("lr", 0.0001, 0.0015),  
-         "optimizer__weight_decay":hp.choice("optimizer__weight_decay",
-            [0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009,
-             0.010, 0.011, 0.012, 0.013, 0.014, 0.015, 0.016, 0.017, 0.018, 0.019]),  
-         "criterion":hp.choice("criterion", [torch.nn.NLLLoss, torch.nn.CrossEntropyLoss]),
-
-         "batch_size":hp.choice("batch_size", [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]),
-         "optimizer__betas":hp.choice("optimizer__betas",
-                                      [[0.86, 0.9991], [0.86, 0.9993], [0.86, 0.9995], [0.86, 0.9997], [0.86, 0.9999],
-                                       [0.88, 0.9991], [0.88, 0.9993], [0.88, 0.9995], [0.88, 0.9997], [0.88, 0.9999],
-                                       [0.90, 0.9991], [0.90, 0.9993], [0.90, 0.9995], [0.90, 0.9997], [0.90, 0.9999],
-                                       [0.92, 0.9991], [0.92, 0.9993], [0.92, 0.9995], [0.92, 0.9997], [0.92, 0.9999],
-                                       [0.94, 0.9991], [0.94, 0.9993], [0.94, 0.9995], [0.94, 0.9997], [0.94, 0.9999]]),
-         "module":hp.choice("module", [module1, module2, module3, module4, module5, module6, module7, module8,
-                                       module9, module10, module11, module12, module13, module14, module15, module16,
-                                       module17, module18, module19, module20, module21, module22, module23, module24]),
-         "init_mode":hp.choice("init_mode", [1, 2, 3, 4]),         
-         "device":hp.choice("device", ["cpu"]),
-         "optimizer":hp.choice("optimizer", [torch.optim.Adam])
-         }
-
-space_nodes = {"title":["titanic"],
-               "path":["path"],
-               "mean":[0],
-               #"std":[0],
-               "std":[0, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.14, 0.16, 0.18, 0.20],
-               "max_epochs":[400],
-               "patience":[1,2,3,4,5,6,7,8,9,10],
-               "lr":[0.0001],
-               "optimizer__weight_decay":[0.000, 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009,
-                                          0.010, 0.011, 0.012, 0.013, 0.014, 0.015, 0.016, 0.017, 0.018, 0.019],
-               "criterion":[torch.nn.NLLLoss, torch.nn.CrossEntropyLoss],
-               "batch_size":[1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024],
-               "optimizer__betas":[[0.86, 0.9991], [0.86, 0.9993], [0.86, 0.9995], [0.86, 0.9997], [0.86, 0.9999],
-                                   [0.88, 0.9991], [0.88, 0.9993], [0.88, 0.9995], [0.88, 0.9997], [0.88, 0.9999],
-                                   [0.90, 0.9991], [0.90, 0.9993], [0.90, 0.9995], [0.90, 0.9997], [0.90, 0.9999],
-                                   [0.92, 0.9991], [0.92, 0.9993], [0.92, 0.9995], [0.92, 0.9997], [0.92, 0.9999],
-                                   [0.94, 0.9991], [0.94, 0.9993], [0.94, 0.9995], [0.94, 0.9997], [0.94, 0.9999]],
-               "module":[module1, module2, module3, module4, module5, module6, module7, module8,
-                         module9, module10, module11, module12, module13, module14, module15, module16,
-                         module17, module18, module19, module20, module21, module22, module23, module24],
-               "init_mode":[1, 2, 3, 4],
-               "device":["cpu"],
-               "optimizer":[torch.optim.Adam]
-               }
-
-best_nodes = {"title":"titanic",
-              "path":"path",
-              "mean":0,
-              "std":0.1,
-              "max_epochs":400,
-              "patience":5,
-              "lr":0.0001,
-              "optimizer__weight_decay":0.005,
-              "criterion":torch.nn.NLLLoss,
-              "batch_size":1,
-              "optimizer__betas":[0.86, 0.999],
-              "module":module3,
-              "init_mode":1,
-              "device":"cpu",
-              "optimizer":torch.optim.Adam
-              }
-
-<<<<<<< HEAD
-#我觉得这边需要添加一个计算计时的功能
-=======
-#閹存垼顫庡妤勭箹鏉堝綊娓剁憰浣瑰潑閸旂姳绔存稉顏囶吀缁犳顓搁弮鍓佹畱閸旂喕鍏�
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-start_time = datetime.datetime.now()
-
-trials = Trials()
-algo = partial(tpe.suggest, n_startup_jobs=10)
-
-best_params = fmin(nn_f, space, algo=algo, max_evals=1, trials=trials)
-print_best_params_acc(trials)
-
-best_nodes = parse_space(trials, space_nodes, best_nodes)
-<<<<<<< HEAD
-#save_inter_params保存的是本次搜索到的参数
-save_inter_params(trials, space_nodes, best_nodes, "titanic")
-trials, space_nodes, best_nodes = load_inter_params("titanic")
-
-#predict中的best_model保存的是本机运行过程中最佳模型
-#现在还有一个奇怪的问题，predict中似乎还是不对，因为初始正确率太高了吧
-#经过我测试，我发现predict中初始正确率确实有在变化，所以应该木问题吧
-#现在就是将所有容易改变的东西都放到space、space_nodes、best_nodes以及parse_space
-#这样的做法有利于避免我忘记修改代码细节从而导致影响模型的训练过程
-#我感觉除了和模型相关的超参我已经搞定的差不多了，今后主要决策和模型相关的超参
-#比如说是模型的层数、每层的节点数、初始化的方式、初始化的范围、偏置的设置值
-#明天的工作就先从模型生成器开始咯。。
-=======
-#save_inter_params娣囨繂鐡ㄩ惃鍕Ц閺堫剚顐奸幖婊呭偍閸掓壆娈戦崣鍌涙殶
-save_inter_params(trials, space_nodes, best_nodes, "titanic")
-trials, space_nodes, best_nodes = load_inter_params("titanic")
-
-#predict娑擃厾娈慴est_model娣囨繂鐡ㄩ惃鍕Ц閺堫剚婧�鏉╂劘顢戞潻鍥┾柤娑擃厽娓舵担铏侀崹锟�
-#閻滄澘婀潻妯绘箒娑擄拷娑擃亜顨岄幀顏嗘畱闂傤噣顣介敍瀹瞨edict娑擃厺鎶�娑斿氦绻曢弰顖欑瑝鐎电櫢绱濋崶鐘辫礋閸掓繂顫愬锝団�橀悳鍥с亰妤傛ü绨￠崥锟�
-#缂佸繗绻冮幋鎴炵ゴ鐠囨洩绱濋幋鎴濆絺閻滅殐redict娑擃厼鍨垫慨瀣劀绾喚宸肩涵顔肩杽閺堝婀崣妯哄閿涘本澧嶆禒銉ョ安鐠囥儲婀梻顕�顣介崥锟�
-#閻滄澘婀亸杈ㄦЦ鐏忓棙澧嶉張澶婎啇閺勬挻鏁奸崣妯兼畱娑撴粏銈块柈鑺ユ杹閸掔殜pace閵嗕够pace_nodes閵嗕攻est_nodes娴犮儱寮穚arse_space
-#鏉╂瑦鐗遍惃鍕粵濞夋洘婀侀崚鈺�绨柆鍨帳閹存垵绻曠拋棰佹叏閺�閫涘敩閻胶绮忛懞鍌欑矤閼板苯顕遍懛鏉戝閸濆秵膩閸ㄥ娈戠拋顓犵矊鏉╁洨鈻�
-#閹存垶鍔呯憴澶愭珟娴滃棗鎷板Ο鈥崇�烽惄绋垮彠閻ㄥ嫯绉撮崣鍌涘灉瀹歌尙绮￠幖鐐茬暰閻ㄥ嫬妯婃稉宥咁樋娴滃棴绱濇禒濠傛倵娑撴槒顩﹂崘宕囩摜閸滃本膩閸ㄥ娴夐崗宕囨畱鐡掑懎寮�
-#濮ｆ柨顩х拠瀛樻Ц濡�崇�烽惃鍕湴閺佽埇锟戒焦鐦＄仦鍌滄畱閼哄倻鍋ｉ弫鑸拷浣稿灥婵瀵查惃鍕煙瀵繈锟戒礁鍨垫慨瀣閻ㄥ嫯瀵栭崶娣拷浣镐焊缂冾喚娈戠拋鍓х枂閸婏拷
-#閺勫骸銇夐惃鍕紣娴ｆ粌姘ㄩ崗鍫滅矤濡�崇�烽悽鐔稿灇閸ｃ劌绱戞慨瀣尨閵嗗倶锟斤拷
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-predict(best_nodes, max_evals=10)
-
-end_time = datetime.datetime.now()
-print("time cost", (end_time - start_time))
-
-<<<<<<< HEAD
-"""
-#模型一旦被修改了之后pickle中的文件再读出来就没用啦
-#还好我及时保存了老版本的模型，不然感觉就心酸了。。。
-#不过其实没保存问题也不大的吧，直接重新计算一次。。。
-#同一日期下的中间结果和最佳模型是配套的，虽然这中间结果未必产生了最佳模型
-=======
-print("mother fucker~")
-"""
-#濡�崇�锋稉锟介弮锕侇潶娣囶喗鏁兼禍鍡曠閸氬窋ickle娑擃厾娈戦弬鍥︽閸愬秷顕伴崙鐑樻降鐏忚鲸鐥呴悽銊ユ殥
-#鏉╂ê銈介幋鎴濆挤閺冩湹绻氱�涙ü绨￠懓浣哄閺堫剛娈戝Ο鈥崇�烽敍灞肩瑝閻掕埖鍔呯憴澶婃皑韫囧啴鍚�娴滃棎锟藉倶锟藉倶锟斤拷
-#娑撳秷绻冮崗璺虹杽濞屸�茬箽鐎涙﹢妫舵０妯圭瘍娑撳秴銇囬惃鍕儌閿涘瞼娲块幒銉╁櫢閺傛媽顓哥粻妞剧濞喡帮拷鍌橈拷鍌橈拷锟�
-#閸氬奔绔撮弮銉︽埂娑撳娈戞稉顓㈡？缂佹挻鐏夐崪灞炬付娴ｈ櫕膩閸ㄥ妲搁柊宥咁殰閻ㄥ嫸绱濋搹鐣屽姧鏉╂瑤鑵戦梻瀵哥波閺嬫粍婀箛鍛獓閻㈢喍绨￠張锟芥担铏侀崹锟�
->>>>>>> 5d4c7c3c29bb40eb52a6c255f261d4fc2e635a9c
-files = open("titanic_intermediate_parameters_2018-9-15221036.pickle", "rb")
+files = open("titanic_intermediate_parameters_2018-9-18083418.pickle", "rb")
 trials, space_nodes, best_nodes = pickle.load(files)
 files.close()
 print(best_nodes)
 #print(space_nodes)
+print()
 
-files = open("titanic_best_model_2018-9-15221021.pickle", "rb")
+files = open("titanic_best_model_2018-9-18083508.pickle", "rb")
 best_model = pickle.load(files)
 files.close()
 best_acc = cal_nnclf_acc(best_model, X_train_scaled, Y_train)
 print(best_acc)
-"""
+
+#输出的居然是下面的结果让我觉得大吃一惊呢，难道是因为随机性？
+#按照我的预期，至少在模型选择层面我觉得应该选择五层左右的吧
+#但是还是有一些最优参数的结果和上次的比如说是patience以及batch_size咯
+#我觉得在参数优化层面可以做点改动就是将optimizer__weight_decay改为固定取值吧
+#我觉得也许是不是说明超参选择以及模型结构方面的优化大致也就只能到这个程度了？
+#需要我增加类似数据集增强等的东西才能够更好的battle吧？感觉模型结构对于结果影响没那么大
+#{'title': 'titanic', 'path': 'path', 'mean': 0, 'std': 0.12, 'max_epochs': 400, 'patience': 9, 'lr': 0.00030619694480391203, 'optimizer__weight_decay': 0.004458260342599436, 'criterion': <class 'torch.nn.modules.loss.NLLLoss'>, 'batch_size': 128, 'optimizer__betas': [0.88, 0.9993], 'module': MyModule3(
+#  (fc1): Linear(in_features=9, out_features=60, bias=True)
+#  (fc2): Linear(in_features=60, out_features=60, bias=True)
+#  (fc3): Linear(in_features=60, out_features=2, bias=True)
+#  (dropout1): Dropout(p=0.1)
+#  (dropout2): Dropout(p=0.2)
+#), 'init_mode': 3, 'device': 'cpu', 'optimizer': <class 'torch.optim.adam.Adam'>}
+#
+#0.8619528619528619
