@@ -1,6 +1,9 @@
 #coding=utf-8
-#这个版本的代码主要就是用于比较我的模型和TPOT模型来PK一下。。我估计我会死的很惨
-#还好啦不要那么灰心丧气吧，至少。。你对于结果的判断还是很准的吧，你确实是被碾压。。
+
+print("mother fucker")
+
+#杩欎釜鐗堟湰鐨勪唬鐮佷富瑕佸氨鏄敤浜庢瘮杈冩垜鐨勬ā鍨嬪拰TPOT妯″瀷鏉K涓�涓嬨�傘�傛垜浼拌鎴戜細姝荤殑寰堟儴
+#杩樺ソ鍟︿笉瑕侀偅涔堢伆蹇冧抚姘斿惂锛岃嚦灏戙�傘�備綘瀵逛簬缁撴灉鐨勫垽鏂繕鏄緢鍑嗙殑鍚э紝浣犵‘瀹炴槸琚⒕鍘嬨�傘��
 import sys
 import random
 import pickle
@@ -73,14 +76,14 @@ for dataset in combine:
     dataset.loc[(dataset['Age'] > 48) & (dataset['Age'] <= 64), 'Age'] = 3 
     dataset.loc[ dataset['Age'] > 64, 'Age'] = 4
     
-#这里的mode是求解pandas.core.series.Series众数的第一个值（可能有多个众数）
+#杩欓噷鐨刴ode鏄眰瑙andas.core.series.Series浼楁暟鐨勭涓�涓�硷紙鍙兘鏈夊涓紬鏁帮級
 freq_port = data_train.Embarked.dropna().mode()[0]
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].fillna(freq_port)
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
 
-#将data_test中的fare元素所缺失的部分由已经包含的数据的中位数决定哈
+#灏哾ata_test涓殑fare鍏冪礌鎵�缂哄け鐨勯儴鍒嗙敱宸茬粡鍖呭惈鐨勬暟鎹殑涓綅鏁板喅瀹氬搱
 data_test['Fare'].fillna(data_test['Fare'].dropna().median(), inplace=True)
 
 for dataset in combine:
@@ -94,34 +97,34 @@ for dataset in combine:
     dataset.loc[(dataset.Cabin.isnull()), 'Cabin'] = 0
     dataset.loc[(dataset.Cabin.notnull()), 'Cabin'] = 1
 
-#尼玛给你说的这个是贡献船票，原来的英文里面根本就没有这种说法嘛
+#灏肩帥缁欎綘璇寸殑杩欎釜鏄础鐚埞绁紝鍘熸潵鐨勮嫳鏂囬噷闈㈡牴鏈氨娌℃湁杩欑璇存硶鍢�
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
 #print(df)
-df_ticket = df.index.values          #共享船票的票号
-tickets = data_train.Ticket.values   #所有的船票
+df_ticket = df.index.values          #鍏变韩鑸圭エ鐨勭エ鍙�
+tickets = data_train.Ticket.values   #鎵�鏈夌殑鑸圭エ
 #print(tickets)
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-        ticket = 0                   #遍历所有船票，在共享船票里面的为1，否则为0
+        ticket = 0                   #閬嶅巻鎵�鏈夎埞绁紝鍦ㄥ叡浜埞绁ㄩ噷闈㈢殑涓�1锛屽惁鍒欎负0
     result.append(ticket)
     
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
-df_ticket = df.index.values          #共享船票的票号
-tickets = data_train.Ticket.values   #所有的船票
+df_ticket = df.index.values          #鍏变韩鑸圭エ鐨勭エ鍙�
+tickets = data_train.Ticket.values   #鎵�鏈夌殑鑸圭エ
 
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-        ticket = 0                   #遍历所有船票，在共享船票里面的为1，否则为0
+        ticket = 0                   #閬嶅巻鎵�鏈夎埞绁紝鍦ㄥ叡浜埞绁ㄩ噷闈㈢殑涓�1锛屽惁鍒欎负0
     result.append(ticket)
 
 results = pd.DataFrame(result)
@@ -154,7 +157,7 @@ Y_train = data_train_1['Survived']
 X_test = data_test_1[['Pclass', 'Sex', 'Age', 'Fare', 'Embarked', 'Cabin', 'Title', 'FamilySizePlus', 'Ticket_Count']]
 
 X_all = pd.concat([X_train, X_test], axis=0)
-#我觉得训练集和测试集需要在一起进行特征缩放，所以注释掉了原来的X_train的特征缩放咯
+#鎴戣寰楄缁冮泦鍜屾祴璇曢泦闇�瑕佸湪涓�璧疯繘琛岀壒寰佺缉鏀撅紝鎵�浠ユ敞閲婃帀浜嗗師鏉ョ殑X_train鐨勭壒寰佺缉鏀惧挴
 X_all_scaled = pd.DataFrame(preprocessing.scale(X_all), columns = X_train.columns)
 #X_train_scaled = pd.DataFrame(preprocessing.scale(X_train), columns = X_train.columns)
 X_train_scaled = X_all_scaled[:len(X_train)]
@@ -285,12 +288,12 @@ def print_nnclf_acc(acc):
 def print_best_params_acc(trials):
     
     trials_list =[]
-    #从trials中读取最大的准确率信息咯
-    #item和result其实指向了一个dict对象
+    #浠巘rials涓鍙栨渶澶х殑鍑嗙‘鐜囦俊鎭挴
+    #item鍜宺esult鍏跺疄鎸囧悜浜嗕竴涓猟ict瀵硅薄
     for item in trials.trials:
         trials_list.append(item)
     
-    #按照关键词进行排序，关键词即为item['result']['loss']
+    #鎸夌収鍏抽敭璇嶈繘琛屾帓搴忥紝鍏抽敭璇嶅嵆涓篿tem['result']['loss']
     trials_list.sort(key=lambda item: item["result"]["loss"])
     
     print("best parameter is:", trials_list[0])
@@ -338,13 +341,13 @@ def record_best_model_acc(clf, acc, best_model, best_acc):
 
 def noise_augment_data(mean, std, X_train, Y_train, columns):
     
-    #这样的设置应该不是修改X_train的数据咯
-    #这里可以通过id(X_train)查看两个变量地址
-    #用这样的方式去判断两个变量是否对应同一个对象简单多了
+    #杩欐牱鐨勮缃簲璇ヤ笉鏄慨鏀筙_train鐨勬暟鎹挴
+    #杩欓噷鍙互閫氳繃id(X_train)鏌ョ湅涓や釜鍙橀噺鍦板潃
+    #鐢ㄨ繖鏍风殑鏂瑰紡鍘诲垽鏂袱涓彉閲忔槸鍚﹀搴斿悓涓�涓璞＄畝鍗曞浜�
     X_noise_train = X_train.copy()
     X_noise_train.is_copy = False
     
-    #获取数据的行数目，并对每一行中colums中的列添加噪声
+    #鑾峰彇鏁版嵁鐨勮鏁扮洰锛屽苟瀵规瘡涓�琛屼腑colums涓殑鍒楁坊鍔犲櫔澹�
     row = X_train.shape[0]
     for i in range(0, row):
         for j in columns:
@@ -352,7 +355,7 @@ def noise_augment_data(mean, std, X_train, Y_train, columns):
 
     return X_noise_train, Y_train
     
-#我觉得这个中文文档介绍hyperopt还是比较好https://www.jianshu.com/p/35eed1567463
+#鎴戣寰楄繖涓腑鏂囨枃妗ｄ粙缁峢yperopt杩樻槸姣旇緝濂絟ttps://www.jianshu.com/p/35eed1567463
 def nn_f(params):
     
     print("mean", params["mean"])
@@ -364,7 +367,7 @@ def nn_f(params):
     print("optimizer__betas", params["optimizer__betas"])
     print("module", params["module"])    
     
-    #X_noise_train与X_train_scaled不同（非同一份拷贝），但是Y_noise_train与Y_train相同
+    #X_noise_train涓嶺_train_scaled涓嶅悓锛堥潪鍚屼竴浠芥嫹璐濓級锛屼絾鏄痀_noise_train涓嶻_train鐩稿悓
     X_noise_train, Y_noise_train = noise_augment_data(params["mean"], params["std"], X_train_scaled, Y_train, columns=[3, 4, 5, 6, 7, 8])
     
     clf = NeuralNetClassifier(lr = params["lr"],
@@ -373,10 +376,10 @@ def nn_f(params):
                               batch_size = params["batch_size"],
                               optimizer__betas = params["optimizer__betas"],
                               module=params["module"],
-                              #下面都是固定的参数咯
+                              #涓嬮潰閮芥槸鍥哄畾鐨勫弬鏁板挴
                               #device="cuda",
                               device="cpu",
-                              #我就说为毛每次都是计算十次呢，才想到是这里clf用了默认参数的缘故
+                              #鎴戝氨璇翠负姣涙瘡娆￠兘鏄绠楀崄娆″憿锛屾墠鎯冲埌鏄繖閲宑lf鐢ㄤ簡榛樿鍙傛暟鐨勭紭鏁�
                               max_epochs = 200,
                               optimizer=torch.optim.Adam,
                               callbacks=[skorch.callbacks.EarlyStopping(patience=5)]
@@ -429,10 +432,10 @@ def predict(best_nodes, max_evals=10):
                                   optimizer__betas = best_nodes["optimizer__betas"],
                                   module=best_nodes["module"],
                               
-                                  #下面都是固定的参数咯
+                                  #涓嬮潰閮芥槸鍥哄畾鐨勫弬鏁板挴
                                   #device="cuda",
                                   device="cpu",
-                                  #我就说为毛每次都是计算十次呢，才想到是这里clf用了默认参数的缘故
+                                  #鎴戝氨璇翠负姣涙瘡娆￠兘鏄绠楀崄娆″憿锛屾墠鎯冲埌鏄繖閲宑lf鐢ㄤ簡榛樿鍙傛暟鐨勭紭鏁�
                                   max_epochs = 200,
                                   optimizer=torch.optim.Adam,
                                   callbacks=[skorch.callbacks.EarlyStopping(patience=5)]
@@ -449,7 +452,7 @@ def predict(best_nodes, max_evals=10):
             
             save_best_model(best_model)
             Y_pred = best_model.predict(X_test.values.astype(np.float32))
-            #将得到的预测结果写入到文件中去咯
+            #灏嗗緱鍒扮殑棰勬祴缁撴灉鍐欏叆鍒版枃浠朵腑鍘诲挴
             data = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
             output = pd.DataFrame(data = data)
             output.to_csv("C:/Users/win7/Desktop/Titanic_Prediction.csv", index=False)
@@ -467,7 +470,7 @@ space = {"mean":hp.choice("mean", [0]),
          "lr":hp.uniform("lr", 0.0001, 0.0010),  
          "optimizer__weight_decay":hp.uniform("optimizer__weight_decay", 0, 0.01),  
          "criterion":hp.choice("criterion", [torch.nn.NLLLoss, torch.nn.CrossEntropyLoss]),
-         #batchsize或许可以改为hp.randint，哦并不能够修改为randint否则可能取0哈，用hp.qloguniform(label, low, high, q)q取1
+         #batchsize鎴栬鍙互鏀逛负hp.randint锛屽摝骞朵笉鑳藉淇敼涓簉andint鍚﹀垯鍙兘鍙�0鍝堬紝鐢╤p.qloguniform(label, low, high, q)q鍙�1
          "batch_size":hp.choice("batch_size", [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]),
          "optimizer__betas":hp.choice("optimizer__betas",[[0.86, 0.999], [0.88, 0.999], [0.90, 0.999], [0.92, 0.999], 
          [0.94, 0.999], [0.90, 0.995], [0.90, 0.997], [0.90, 0.999], [0.90, 0.9995], [0.90, 0.9997], [0.90, 0.9999]]),
@@ -545,6 +548,6 @@ acc1 = cal_nnclf_acc(best_model, X_test_scaled, Y_result)
 print(acc1)
 acc2 = cal_nnclf_acc(exported_pipeline, X_test_scaled, Y_result)
 print(acc2)
-#最后的结果居然是这个样子的，我感觉很心酸呢。。
+#鏈�鍚庣殑缁撴灉灞呯劧鏄繖涓牱瀛愮殑锛屾垜鎰熻寰堝績閰稿憿銆傘��
 #0.8421052631578947
 #0.9019138755980861
