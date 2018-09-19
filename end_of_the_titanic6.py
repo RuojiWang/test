@@ -1,4 +1,7 @@
 #coding=utf-8
+
+print("mother fucker")
+
 import os
 import sys
 import random
@@ -73,14 +76,14 @@ for dataset in combine:
     dataset.loc[(dataset['Age'] > 48) & (dataset['Age'] <= 64), 'Age'] = 3 
     dataset.loc[ dataset['Age'] > 64, 'Age'] = 4
     
-#杩欓噷鐨刴ode鏄眰瑙andas.core.series.Series浼楁暟鐨勭涓�涓�硷紙鍙兘鏈夊涓紬鏁帮級
+#鏉╂瑩鍣烽惃鍒磑de閺勵垱鐪扮憴顤禷ndas.core.series.Series娴兼鏆熼惃鍕儑娑擄拷娑擃亜锟界》绱欓崣顖濆厴閺堝顦挎稉顏冪船閺佸府绱�
 freq_port = data_train.Embarked.dropna().mode()[0]
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].fillna(freq_port)
 for dataset in combine:
     dataset['Embarked'] = dataset['Embarked'].map({'S': 0, 'C': 1, 'Q': 2})
 
-#灏哾ata_test涓殑fare鍏冪礌鎵�缂哄け鐨勯儴鍒嗙敱宸茬粡鍖呭惈鐨勬暟鎹殑涓綅鏁板喅瀹氬搱
+#鐏忓摼ata_test娑擃厾娈慺are閸忓啰绀岄幍锟界紓鍝勩亼閻ㄥ嫰鍎撮崚鍡欐暠瀹歌尙绮￠崠鍛儓閻ㄥ嫭鏆熼幑顔炬畱娑擃厺缍呴弫鏉垮枀鐎规艾鎼�
 data_test['Fare'].fillna(data_test['Fare'].dropna().median(), inplace=True)
 
 for dataset in combine:
@@ -94,34 +97,34 @@ for dataset in combine:
     dataset.loc[(dataset.Cabin.isnull()), 'Cabin'] = 0
     dataset.loc[(dataset.Cabin.notnull()), 'Cabin'] = 1
 
-#灏肩帥缁欎綘璇寸殑杩欎釜鏄础鐚埞绁紝鍘熸潵鐨勮嫳鏂囬噷闈㈡牴鏈氨娌℃湁杩欑璇存硶鍢�
+#鐏忚偐甯ョ紒娆庣稑鐠囧娈戞潻娆庨嚋閺勵垵纭�閻氼喛鍩炵粊顭掔礉閸樼喐娼甸惃鍕閺傚洭鍣烽棃銏＄壌閺堫剙姘ㄥ▽鈩冩箒鏉╂瑧顫掔拠瀛樼《閸拷
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
 #print(df)
-df_ticket = df.index.values          #鍏变韩鑸圭エ鐨勭エ鍙�
-tickets = data_train.Ticket.values   #鎵�鏈夌殑鑸圭エ
+df_ticket = df.index.values          #閸忓彉闊╅懜鍦偍閻ㄥ嫮銈ㄩ崣锟�
+tickets = data_train.Ticket.values   #閹碉拷閺堝娈戦懜鍦偍
 #print(tickets)
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-        ticket = 0                   #閬嶅巻鎵�鏈夎埞绁紝鍦ㄥ叡浜埞绁ㄩ噷闈㈢殑涓�1锛屽惁鍒欎负0
+        ticket = 0                   #闁秴宸婚幍锟介張澶庡煘缁侇煉绱濋崷銊ュ彙娴滎偉鍩炵粊銊╁櫡闂堛垻娈戞稉锟�1閿涘苯鎯侀崚娆庤礋0
     result.append(ticket)
     
 df = data_train['Ticket'].value_counts()
 df = pd.DataFrame(df)
 df = df[df['Ticket'] > 1]
-df_ticket = df.index.values          #鍏变韩鑸圭エ鐨勭エ鍙�
-tickets = data_train.Ticket.values   #鎵�鏈夌殑鑸圭エ
+df_ticket = df.index.values          #閸忓彉闊╅懜鍦偍閻ㄥ嫮銈ㄩ崣锟�
+tickets = data_train.Ticket.values   #閹碉拷閺堝娈戦懜鍦偍
 
 result = []
 for ticket in tickets:
     if ticket in df_ticket:
         ticket = 1
     else:
-        ticket = 0                   #閬嶅巻鎵�鏈夎埞绁紝鍦ㄥ叡浜埞绁ㄩ噷闈㈢殑涓�1锛屽惁鍒欎负0
+        ticket = 0                   #闁秴宸婚幍锟介張澶庡煘缁侇煉绱濋崷銊ュ彙娴滎偉鍩炵粊銊╁櫡闂堛垻娈戞稉锟�1閿涘苯鎯侀崚娆庤礋0
     result.append(ticket)
 
 results = pd.DataFrame(result)
@@ -154,7 +157,7 @@ Y_train = data_train_1['Survived']
 X_test = data_test_1[['Pclass', 'Sex', 'Age', 'Fare', 'Embarked', 'Cabin', 'Title', 'FamilySizePlus', 'Ticket_Count']]
 
 X_all = pd.concat([X_train, X_test], axis=0)
-#鎴戣寰楄缁冮泦鍜屾祴璇曢泦闇�瑕佸湪涓�璧疯繘琛岀壒寰佺缉鏀撅紝鎵�浠ユ敞閲婃帀浜嗗師鏉ョ殑X_train鐨勭壒寰佺缉鏀惧挴
+#閹存垼顫庡妤勵唲缂佸啴娉﹂崪灞剧ゴ鐠囨洟娉﹂棁锟界憰浣告躬娑擄拷鐠х柉绻樼悰宀�澹掑浣虹級閺�鎾呯礉閹碉拷娴犮儲鏁為柌濠冨竴娴滃棗甯弶銉ф畱X_train閻ㄥ嫮澹掑浣虹級閺�鎯ф尨
 X_all_scaled = pd.DataFrame(preprocessing.scale(X_all), columns = X_train.columns)
 #X_train_scaled = pd.DataFrame(preprocessing.scale(X_train), columns = X_train.columns)
 X_train_scaled = X_all_scaled[:len(X_train)]
@@ -179,7 +182,7 @@ class MyModule1(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -223,7 +226,7 @@ class MyModule2(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -267,7 +270,7 @@ class MyModule3(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -311,7 +314,7 @@ class MyModule4(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -357,7 +360,7 @@ class MyModule5(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -408,7 +411,7 @@ class MyModule6(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -459,7 +462,7 @@ class MyModule7(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -510,7 +513,7 @@ class MyModule8(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -564,7 +567,7 @@ class MyModule9(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -624,7 +627,7 @@ class MyModule10(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -683,7 +686,7 @@ class MyModule11(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -742,7 +745,7 @@ class MyModule12(nn.Module):
 
     def init_weight(self, mode):
         if (mode==1):
-            pass#灏辨槸浣跨敤榛樿璁剧疆鐨勬剰鎬濆挴
+            pass#鐏忚鲸妲告担璺ㄦ暏姒涙顓荤拋鍓х枂閻ㄥ嫭鍓伴幀婵嗘尨
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -804,7 +807,7 @@ class MyModule13(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -871,7 +874,7 @@ class MyModule14(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -938,7 +941,7 @@ class MyModule15(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1005,7 +1008,7 @@ class MyModule16(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1074,7 +1077,7 @@ class MyModule17(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1148,7 +1151,7 @@ class MyModule18(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1222,7 +1225,7 @@ class MyModule19(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1296,7 +1299,7 @@ class MyModule20(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1372,7 +1375,7 @@ class MyModule21(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1453,7 +1456,7 @@ class MyModule22(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1534,7 +1537,7 @@ class MyModule23(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1615,7 +1618,7 @@ class MyModule24(nn.Module):
     def init_weight(self, mode):
         
         if (mode==1):
-            pass#灏辨槸浠�涔堥兘涓嶅仛鐨勬剰鎬�
+            pass#鐏忚鲸妲告禒锟芥稊鍫ュ厴娑撳秴浠涢惃鍕壈閹拷
         
         elif (mode==2):
             torch.nn.init.normal_(self.fc1.weight.data)
@@ -1717,12 +1720,12 @@ def print_nnclf_acc(acc):
 def print_best_params_acc(trials):
     
     trials_list =[]
-    #浠巘rials涓鍙栨渶澶х殑鍑嗙‘鐜囦俊鎭挴
-    #item鍜宺esult鍏跺疄鎸囧悜浜嗕竴涓猟ict瀵硅薄
+    #娴犲窐rials娑擃叀顕伴崣鏍ㄦ付婢堆呮畱閸戝棛鈥橀悳鍥︿繆閹垰鎸�
+    #item閸滃esult閸忚泛鐤勯幐鍥ф倻娴滃棔绔存稉鐚焛ct鐎电钖�
     for item in trials.trials:
         trials_list.append(item)
     
-    #鎸夌収鍏抽敭璇嶈繘琛屾帓搴忥紝鍏抽敭璇嶅嵆涓篿tem['result']['loss']
+    #閹稿鍙庨崗鎶芥暛鐠囧秷绻樼悰灞惧笓鎼村骏绱濋崗鎶芥暛鐠囧秴宓嗘稉绡縯em['result']['loss']
     trials_list.sort(key=lambda item: item["result"]["loss"])
     
     print("best parameter is:", trials_list[0])
@@ -1784,7 +1787,7 @@ def noise_augment_data(mean, std, X_train, Y_train, columns):
 
     return X_noise_train, Y_train
     
-#鎴戣寰楄繖涓腑鏂囨枃妗ｄ粙缁峢yperopt杩樻槸姣旇緝濂絟ttps://www.jianshu.com/p/35eed1567463
+#閹存垼顫庡妤勭箹娑擃亙鑵戦弬鍥ㄦ瀮濡楋絼绮欑紒宄peropt鏉╂ɑ妲稿В鏃囩窛婵傜禑ttps://www.jianshu.com/p/35eed1567463
 def nn_f(params):
     
     print("mean", params["mean"])
@@ -1874,9 +1877,9 @@ def predict(best_nodes, max_evals=10):
                                   optimizer = best_nodes["optimizer"]
                                   )
         
-        #鍦ㄨ繖閲嶆柊鍒濆鍖栦竴娆″熀鏈氨浼氬緱鍒板樊寮傚緢澶х殑缁撴灉鍚�
-        #鐜板湪鍙互鐪嬪埌纭疄鏄粡杩囦簡鏉冮噸鍒濆鍖栨ā鍨嬮噸鏂拌缁冪殑
-        #浣嗘槸杩欎釜best_model鐨勬暟鎹�庝箞杩樻槸涓婁竴鍥炵殑鏁版嵁锛�
+        #閸︺劏绻栭柌宥嗘煀閸掓繂顫愰崠鏍︾濞嗏�崇唨閺堫剙姘ㄦ导姘繁閸掓澘妯婂鍌氱发婢堆呮畱缂佹挻鐏夐崥锟�
+        #閻滄澘婀崣顖欎簰閻鍩岀涵顔肩杽閺勵垳绮℃潻鍥︾啊閺夊啴鍣搁崚婵嗩潗閸栨牗膩閸ㄥ鍣搁弬鎷岊唲缂佸啰娈�
+        #娴ｅ棙妲告潻娆庨嚋best_model閻ㄥ嫭鏆熼幑顔斤拷搴濈疄鏉╂ɑ妲告稉濠佺閸ョ偟娈戦弫鐗堝祦閿涳拷
         clf.module.init_weight(best_nodes["init_mode"])
         
         clf.fit(X_train_scaled.values.astype(np.float32), Y_train.values.astype(np.longlong)) 
@@ -1884,9 +1887,9 @@ def predict(best_nodes, max_evals=10):
         metric = cal_nnclf_acc(clf, X_train_scaled, Y_train)
         print_nnclf_acc(metric)
         
-        #閭ｄ箞鐜板湪鐨刡est_model搴旇灏变笉浼氳淇敼浜嗗惂
+        #闁絼绠為悳鏉挎躬閻ㄥ垺est_model鎼存棁顕氱亸鍙樼瑝娴兼俺顫︽穱顔芥暭娴滃棗鎯�
         best_model, best_acc, flag = record_best_model_acc(clf, metric, best_model, best_acc)
-        #閫氳繃涓嬮潰鐨勪袱琛屼唬鐮佸彲浠ュ彂鐜癱lf纭疄姣忔閮芥槸鏂板垱寤虹殑锛屼絾鏄痬odule姣忔閮芥槸閲嶅浣跨敤鐨�
+        #闁俺绻冩稉瀣桨閻ㄥ嫪琚辩悰灞煎敩閻礁褰叉禒銉ュ絺閻滅櫛lf绾喖鐤勫В蹇旑偧闁姤妲搁弬鏉垮灡瀵よ櫣娈戦敍灞肩稻閺勭棳odule濮ｅ繑顐奸柈鑺ユЦ闁插秴顦叉担璺ㄦ暏閻拷
         #print(id(clf))
         #print(id(clf.module))
     
@@ -1900,15 +1903,15 @@ def predict(best_nodes, max_evals=10):
             print("prediction file has been written.")
         print()
      
-    #鍥犱负涓嬮潰鐨刢lf涓殑module宸茬粡琚噸鏂拌缁冧簡锛屾墍浠ュ凡缁忔槸鏂扮殑妯″瀷浜嗭紝杩樻槸鐩存帴杈撳嚭best_acc   
+    #閸ョ姳璐熸稉瀣桨閻ㄥ垻lf娑擃厾娈憁odule瀹歌尙绮＄悮顐﹀櫢閺傛媽顔勭紒鍐х啊閿涘本澧嶆禒銉ュ嚒缂佸繑妲搁弬鎵畱濡�崇�锋禍鍡礉鏉╂ɑ妲搁惄瀛樺复鏉堟挸鍤璪est_acc   
     #metric = cal_nnclf_acc(best_model, X_train_scaled, Y_train)
     print("the best accuracy rate of the model on the whole train dataset is:", best_acc)
     
-#鎴戠湡鐨勬浌涔愶紝鍋氫笉鍋氭暟鎹泦澧炲己濂藉儚宸埆寰堝ぇ鍝︼紝涓嶆坊鍔犲櫔澹板噯纭巼楂樺緱澶氬憿銆傘�傚ソ鍍忎篃涓嶆槸
-#涓婂洖閭ｄ釜璨屼技鏄阀鍚堣�屽凡锛屾垜澶氳繍琛屼簡鍑犳鍙戠幇鍔犱簡鍣０濂藉儚鏄楂樹竴鐐圭偣鍛€�傘��
-#鍊掓槸patience璁剧疆涓�10鐨勬椂鍊欑粷澹佹病鏈夎缃负5鐨勬椂鍊欐晥鏋滃ソ鍛€�傘�備笉鐪嬭繍琛岃緭鍑虹湡杩樹笉鐭ラ亾
-#鐜板湪鎴戠殑浠ｇ爜搴旂敤鍒颁笅涓�涓増鏈殑鏃跺�欏彧闇�瑕佷慨鏀箂pace銆乻pace_nodes浠ュ強best_nodes鍜宲arse_space
-#predict鍑芥暟鍐卍ata = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
+#閹存垹婀￠惃鍕祵娑旀劧绱濋崑姘瑝閸嬫碍鏆熼幑顕�娉︽晶鐐插繁婵傝棄鍎氬顔煎焼瀵板牆銇囬崫锔肩礉娑撳秵鍧婇崝鐘叉珨婢规澘鍣涵顔惧芳妤傛ê绶辨径姘喛閵嗗倶锟藉倸銈介崓蹇庣瘍娑撳秵妲�
+#娑撳﹤娲栭柇锝勯嚋鐠ㄥ奔鎶�閺勵垰闃�閸氬牐锟藉苯鍑￠敍灞惧灉婢舵俺绻嶇悰灞肩啊閸戠姵顐奸崣鎴犲箛閸旂姳绨￠崳顏勶紣婵傝棄鍎氶弰顖濐洣妤傛ü绔撮悙鍦仯閸涒偓锟藉倶锟斤拷
+#閸婃帗妲竝atience鐠佸墽鐤嗘稉锟�10閻ㄥ嫭妞傞崐娆戠卜婢逛焦鐥呴張澶庮啎缂冾喕璐�5閻ㄥ嫭妞傞崐娆愭櫏閺嬫粌銈介崨鈧拷鍌橈拷鍌欑瑝閻绻嶇悰宀冪翻閸戣櫣婀℃潻妯圭瑝閻儵浜�
+#閻滄澘婀幋鎴犳畱娴狅絿鐖滄惔鏃傛暏閸掗绗呮稉锟芥稉顏嗗閺堫剛娈戦弮璺猴拷娆忓涧闂囷拷鐟曚椒鎱ㄩ弨绠俻ace閵嗕够pace_nodes娴犮儱寮穊est_nodes閸滃arse_space
+#predict閸戣姤鏆熼崘鍗峚ta = {"PassengerId":data_test["PassengerId"], "Survived":Y_pred}
 space = {"title":hp.choice("title", ["titanic"]),
          "path":hp.choice("path", ["C:/Users/1/Desktop/Titanic_Prediction.csv"]),
          "mean":hp.choice("mean", [0]),
@@ -1979,7 +1982,7 @@ best_nodes = {"title":"titanic",
               "optimizer":torch.optim.Adam
               }
 
-#鎴戣寰楄繖杈归渶瑕佹坊鍔犱竴涓绠楄鏃剁殑鍔熻兘
+#閹存垼顫庡妤勭箹鏉堝綊娓剁憰浣瑰潑閸旂姳绔存稉顏囶吀缁犳顓搁弮鍓佹畱閸旂喕鍏�
 start_time = datetime.datetime.now()
 
 trials = Trials()
@@ -1989,18 +1992,18 @@ best_params = fmin(nn_f, space, algo=algo, max_evals=1, trials=trials)
 print_best_params_acc(trials)
 
 best_nodes = parse_space(trials, space_nodes, best_nodes)
-#save_inter_params淇濆瓨鐨勬槸鏈鎼滅储鍒扮殑鍙傛暟
+#save_inter_params娣囨繂鐡ㄩ惃鍕Ц閺堫剚顐奸幖婊呭偍閸掓壆娈戦崣鍌涙殶
 save_inter_params(trials, space_nodes, best_nodes, "titanic")
 trials, space_nodes, best_nodes = load_inter_params("titanic")
 
-#predict涓殑best_model淇濆瓨鐨勬槸鏈満杩愯杩囩▼涓渶浣虫ā鍨�
-#鐜板湪杩樻湁涓�涓鎬殑闂锛宲redict涓技涔庤繕鏄笉瀵癸紝鍥犱负鍒濆姝ｇ‘鐜囧お楂樹簡鍚�
-#缁忚繃鎴戞祴璇曪紝鎴戝彂鐜皃redict涓垵濮嬫纭巼纭疄鏈夊湪鍙樺寲锛屾墍浠ュ簲璇ユ湪闂鍚�
-#鐜板湪灏辨槸灏嗘墍鏈夊鏄撴敼鍙樼殑涓滆タ閮芥斁鍒皊pace銆乻pace_nodes銆乥est_nodes浠ュ強parse_space
-#杩欐牱鐨勫仛娉曟湁鍒╀簬閬垮厤鎴戝繕璁颁慨鏀逛唬鐮佺粏鑺備粠鑰屽鑷村奖鍝嶆ā鍨嬬殑璁粌杩囩▼
-#鎴戞劅瑙夐櫎浜嗗拰妯″瀷鐩稿叧鐨勮秴鍙傛垜宸茬粡鎼炲畾鐨勫樊涓嶅浜嗭紝浠婂悗涓昏鍐崇瓥鍜屾ā鍨嬬浉鍏崇殑瓒呭弬
-#姣斿璇存槸妯″瀷鐨勫眰鏁般�佹瘡灞傜殑鑺傜偣鏁般�佸垵濮嬪寲鐨勬柟寮忋�佸垵濮嬪寲鐨勮寖鍥淬�佸亸缃殑璁剧疆鍊�
-#鏄庡ぉ鐨勫伐浣滃氨鍏堜粠妯″瀷鐢熸垚鍣ㄥ紑濮嬪挴銆傘��
+#predict娑擃厾娈慴est_model娣囨繂鐡ㄩ惃鍕Ц閺堫剚婧�鏉╂劘顢戞潻鍥┾柤娑擃厽娓舵担铏侀崹锟�
+#閻滄澘婀潻妯绘箒娑擄拷娑擃亜顨岄幀顏嗘畱闂傤噣顣介敍瀹瞨edict娑擃厺鎶�娑斿氦绻曢弰顖欑瑝鐎电櫢绱濋崶鐘辫礋閸掓繂顫愬锝団�橀悳鍥с亰妤傛ü绨￠崥锟�
+#缂佸繗绻冮幋鎴炵ゴ鐠囨洩绱濋幋鎴濆絺閻滅殐redict娑擃厼鍨垫慨瀣劀绾喚宸肩涵顔肩杽閺堝婀崣妯哄閿涘本澧嶆禒銉ョ安鐠囥儲婀梻顕�顣介崥锟�
+#閻滄澘婀亸杈ㄦЦ鐏忓棙澧嶉張澶婎啇閺勬挻鏁奸崣妯兼畱娑撴粏銈块柈鑺ユ杹閸掔殜pace閵嗕够pace_nodes閵嗕攻est_nodes娴犮儱寮穚arse_space
+#鏉╂瑦鐗遍惃鍕粵濞夋洘婀侀崚鈺�绨柆鍨帳閹存垵绻曠拋棰佹叏閺�閫涘敩閻胶绮忛懞鍌欑矤閼板苯顕遍懛鏉戝閸濆秵膩閸ㄥ娈戠拋顓犵矊鏉╁洨鈻�
+#閹存垶鍔呯憴澶愭珟娴滃棗鎷板Ο鈥崇�烽惄绋垮彠閻ㄥ嫯绉撮崣鍌涘灉瀹歌尙绮￠幖鐐茬暰閻ㄥ嫬妯婃稉宥咁樋娴滃棴绱濇禒濠傛倵娑撴槒顩﹂崘宕囩摜閸滃本膩閸ㄥ娴夐崗宕囨畱鐡掑懎寮�
+#濮ｆ柨顩х拠瀛樻Ц濡�崇�烽惃鍕湴閺佽埇锟戒焦鐦＄仦鍌滄畱閼哄倻鍋ｉ弫鑸拷浣稿灥婵瀵查惃鍕煙瀵繈锟戒礁鍨垫慨瀣閻ㄥ嫯瀵栭崶娣拷浣镐焊缂冾喚娈戠拋鍓х枂閸婏拷
+#閺勫骸銇夐惃鍕紣娴ｆ粌姘ㄩ崗鍫滅矤濡�崇�烽悽鐔稿灇閸ｃ劌绱戞慨瀣尨閵嗗倶锟斤拷
 predict(best_nodes, max_evals=10)
 
 end_time = datetime.datetime.now()
@@ -2008,10 +2011,10 @@ print("time cost", (end_time - start_time))
 
 print("mother fucker~")
 """
-#妯″瀷涓�鏃﹁淇敼浜嗕箣鍚巔ickle涓殑鏂囦欢鍐嶈鍑烘潵灏辨病鐢ㄥ暒
-#杩樺ソ鎴戝強鏃朵繚瀛樹簡鑰佺増鏈殑妯″瀷锛屼笉鐒舵劅瑙夊氨蹇冮吀浜嗐�傘�傘��
-#涓嶈繃鍏跺疄娌′繚瀛橀棶棰樹篃涓嶅ぇ鐨勫惂锛岀洿鎺ラ噸鏂拌绠椾竴娆°�傘�傘��
-#鍚屼竴鏃ユ湡涓嬬殑涓棿缁撴灉鍜屾渶浣虫ā鍨嬫槸閰嶅鐨勶紝铏界劧杩欎腑闂寸粨鏋滄湭蹇呬骇鐢熶簡鏈�浣虫ā鍨�
+#濡�崇�锋稉锟介弮锕侇潶娣囶喗鏁兼禍鍡曠閸氬窋ickle娑擃厾娈戦弬鍥︽閸愬秷顕伴崙鐑樻降鐏忚鲸鐥呴悽銊ユ殥
+#鏉╂ê銈介幋鎴濆挤閺冩湹绻氱�涙ü绨￠懓浣哄閺堫剛娈戝Ο鈥崇�烽敍灞肩瑝閻掕埖鍔呯憴澶婃皑韫囧啴鍚�娴滃棎锟藉倶锟藉倶锟斤拷
+#娑撳秷绻冮崗璺虹杽濞屸�茬箽鐎涙﹢妫舵０妯圭瘍娑撳秴銇囬惃鍕儌閿涘瞼娲块幒銉╁櫢閺傛媽顓哥粻妞剧濞喡帮拷鍌橈拷鍌橈拷锟�
+#閸氬奔绔撮弮銉︽埂娑撳娈戞稉顓㈡？缂佹挻鐏夐崪灞炬付娴ｈ櫕膩閸ㄥ妲搁柊宥咁殰閻ㄥ嫸绱濋搹鐣屽姧鏉╂瑤鑵戦梻瀵哥波閺嬫粍婀箛鍛獓閻㈢喍绨￠張锟芥担铏侀崹锟�
 files = open("titanic_intermediate_parameters_2018-9-15221036.pickle", "rb")
 trials, space_nodes, best_nodes = pickle.load(files)
 files.close()
